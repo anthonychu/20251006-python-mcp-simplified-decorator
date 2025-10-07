@@ -1,5 +1,5 @@
 import azure.functions as func
-from mcp_tool_decorator import get_mcp_tool
+from mcp_tool_decorator import MCPToolContext, get_mcp_tool
 from typing import Annotated
 
 
@@ -19,11 +19,13 @@ def add_numbers(
 
 @mcp_tool()
 def greet_user(
-    name: Annotated[str, "The name of the user to greet"]
+    name: Annotated[str, "The name of the user to greet"],
+    context: MCPToolContext
 ) -> str:
     """
     Greet a user by name.
     """
+    print(context["arguments"].keys())  # Just to show that context is passed
     return f"Hello, {name}!"
 
 

@@ -4,6 +4,10 @@ import inspect
 from typing import get_origin, get_args, Annotated, Tuple, Any, Callable, Dict
 
 
+class MCPToolContext(Dict[str, Any]):
+    pass
+
+
 class ToolProperty:
     def __init__(self, property_name: str, property_type: str, description: str):
         self.propertyName = property_name
@@ -92,6 +96,10 @@ def mcp_tool(app: func.FunctionApp) -> Callable[[Callable], Callable]:
             # Extract actual type and description (handles Annotated types)
             actual_type, param_description = _extract_type_and_description(param_name, param_type_hint)
             
+            # Skip MCPToolContext parameters - they should not be included in tool properties
+            if actual_type is MCPToolContext:
+                continue
+            
             # Map the actual type to MCP property type
             property_type = type_mapping.get(actual_type, "string")
             
@@ -111,8 +119,15 @@ def mcp_tool(app: func.FunctionApp) -> Callable[[Callable], Callable]:
                 
                 # Extract arguments and call the original function
                 kwargs = {}
-                for param_name in sig.parameters.keys():
-                    if param_name in arguments:
+                for param_name, param in sig.parameters.items():
+                    # Get the actual type for this parameter
+                    param_type_hint = param.annotation if param.annotation != inspect.Parameter.empty else str
+                    actual_type, _ = _extract_type_and_description(param_name, param_type_hint)
+                    
+                    # If parameter is MCPToolContext, pass the deserialized context
+                    if actual_type is MCPToolContext:
+                        kwargs[param_name] = content
+                    elif param_name in arguments:
                         kwargs[param_name] = arguments[param_name]
                     else:
                         return f"Error: Missing required parameter '{param_name}' for function '{tool_name}'"

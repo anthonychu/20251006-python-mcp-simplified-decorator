@@ -7,6 +7,7 @@ A Python decorator that simplifies creating MCP tool triggers using Azure Functi
 - **Automatic tool registration**: Converts regular Python functions into MCP tools
 - **Supports basic parameter types**: `int`, `str`, `float`, `bool`
 - **Flexible descriptions**: Supports custom parameter descriptions via `Annotated` types
+- **Context access**: Functions can access the full MCP tool context via `MCPToolContext` parameter
 
 ## The `@mcp_tool` Decorator
 
@@ -21,7 +22,7 @@ The `@mcp_tool` decorator automatically creates MCP tool triggers from Python fu
 
 ```python
 import azure.functions as func
-from mcp_tool_decorator import get_mcp_tool
+from mcp_tool_decorator import MCPToolContext, get_mcp_tool
 from typing import Annotated
 
 app = func.FunctionApp()
@@ -47,6 +48,27 @@ The decorator maps Python types to MCP property types:
 - `float` → `"number"`
 - `bool` → `"boolean"`
 - Unknown types → `"string"` (fallback)
+
+### Accessing Context with MCPToolContext
+
+Functions can access the full MCP tool context by including a parameter of type `MCPToolContext`. This parameter provides access to the complete context passed to the tool, including arguments and any additional metadata.
+
+```python
+@mcp_tool()
+def greet_user(
+    name: Annotated[str, "The name of the user to greet"],
+    context: MCPToolContext
+) -> str:
+    """
+    Greet a user by name.
+    """
+    print(context["arguments"].keys())  # Access the full context
+    return f"Hello, {name}!"
+```
+
+**Important notes about MCPToolContext:**
+- Include a parameter with type `MCPToolContext` to access the full context
+- The context is a dictionary containing the tool invocation data
 
 ### Parameter Descriptions
 
@@ -75,6 +97,12 @@ The decorator provides comprehensive error handling:
 
 ## Example Functions
 
+Note: Examples assume the following imports:
+```python
+from mcp_tool_decorator import MCPToolContext, get_mcp_tool
+from typing import Annotated
+```
+
 ### Adding Numbers
 ```python
 @mcp_tool()
@@ -92,11 +120,13 @@ def add_numbers(
 ```python
 @mcp_tool()
 def greet_user(
-    name: Annotated[str, "The name of the user to greet"]
+    name: Annotated[str, "The name of the user to greet"],
+    context: MCPToolContext
 ) -> str:
     """
     Greet a user by name.
     """
+    print(context["arguments"].keys())  # Just to show that context is passed
     return f"Hello, {name}!"
 ```
 
