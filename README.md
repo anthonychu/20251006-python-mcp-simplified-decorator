@@ -53,12 +53,10 @@ The decorator maps Python types to MCP property types:
 Use `Annotated` types to provide custom parameter descriptions:
 
 ```python
-from typing import Annotated
-
 @mcp_tool()
 def weather(
-    city: Annotated[str, "The city to get the weather for"],
-    state: Annotated[str, "The state of the city"]
+    city: str,
+    state: str
 ) -> str:
     """
     A simple function to get the weather for a city.
@@ -106,8 +104,8 @@ def greet_user(
 ```python
 @mcp_tool()
 def weather(
-    city: Annotated[str, "The city to get the weather for"],
-    state: Annotated[str, "The state of the city"]
+    city: str,
+    state: str
 ) -> str:
     """
     A simple function to get the weather for a city.

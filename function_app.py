@@ -29,8 +29,8 @@ def greet_user(
 
 @mcp_tool()
 def weather(
-    city: Annotated[str, "The city to get the weather for"],
-    state: Annotated[str, "The state of the city"]
+    city: str,
+    state: str
 ) -> str:
     """
     A simple function to get the weather for a city.
