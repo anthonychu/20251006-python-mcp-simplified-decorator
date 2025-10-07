@@ -103,10 +103,7 @@ def greet_user(
 ### Weather Information
 ```python
 @mcp_tool()
-def weather(
-    city: str,
-    state: str
-) -> str:
+def weather(city: str, state: str) -> str:
     """
     A simple function to get the weather for a city.
     """
