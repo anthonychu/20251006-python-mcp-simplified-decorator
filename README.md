@@ -83,7 +83,7 @@ def add_numbers(
     number2: Annotated[int, "The second integer to add"]
 ) -> str:
     """
-    A simple function to add two integers.
+    Add two integers.
     """
     return str(number1 + number2)
 ```
@@ -95,7 +95,7 @@ def greet_user(
     name: Annotated[str, "The name of the user to greet"]
 ) -> str:
     """
-    A simple function to greet a user by name.
+    Greet a user by name.
     """
     return f"Hello, {name}!"
 ```
@@ -105,7 +105,7 @@ def greet_user(
 @mcp_tool()
 def weather(city: str, state: str) -> str:
     """
-    A simple function to get the weather for a city.
+    Get the weather for a city.
     """
     return f"The weather in {city}, {state} is sunny with a high of 21°C."
 ```
