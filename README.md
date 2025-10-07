@@ -55,11 +55,11 @@ Use `Annotated` types to provide custom parameter descriptions:
 ```python
 @mcp_tool()
 def weather(
-    city: str,
-    state: str
+    city: Annotated[str, "The name of the city"],
+    state: Annotated[str, "The abbreviation of the state"]
 ) -> str:
     """
-    A simple function to get the weather for a city.
+    Get the weather for a city.
     """
     return f"The weather in {city}, {state} is sunny with a high of 21°C."
 ```
